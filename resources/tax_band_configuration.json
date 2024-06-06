@@ -1,0 +1,7 @@
+[
+    {"start": 0, "end": 145000, "percentageTax": 0},
+    {"start": 145000.01, "end": 250000, "percentageTax": 0.02},
+    {"start": 250000.01, "end": 325000, "percentageTax": 0.05},
+    {"start": 325000.01, "end": 750000, "percentageTax": 0.10},
+    {"start": 750000.01, "end": 2147483647, "percentageTax": 0.12}
+]
