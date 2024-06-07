@@ -3,16 +3,20 @@ package main
 import (
 	"tax-calculator/server"
 	"time"
+    "fmt"
 )
 
 func updateChannelWhenServerReady(isServerReady chan bool) {
     startTime := time.Now()
     for (true) {
         _ , err := getTaxDueForPropertyOfValue(200_000)
+        fmt.Printf("TEST PRINT - err value: %s\n", err)
         if err == nil{
+            fmt.Println("TEST PRINT - Server GET operation a success")
             break
         }
-        if time.Since(startTime) > 1000 {
+        if time.Since(startTime) > time.Second {
+            fmt.Println("TEST PRINT - panicked")
             panic("Server timed out")
         }
     }
