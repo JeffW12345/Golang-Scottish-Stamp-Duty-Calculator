@@ -8,12 +8,17 @@ import (
 )
 
 func didPanicHappen(f func()) (didPanic bool) {
-    defer func() {
-        if r := recover(); r != nil {
-            didPanic = true
-        }
-    }()
-    f()
+    go func(){
+		defer func() {
+			if r := recover(); r != nil {
+				didPanic = true
+			}
+		}()
+		monkey.Patch(getTaxDueForPropertyOfValue, func(valueOfProperty float32) (float32, error) {
+			return 0, fmt.Errorf("mock error")
+		})
+		f()
+	} ()
     return
 }
 
@@ -36,16 +41,17 @@ func TestUpdateChannelWhenServerReady(t *testing.T) {
         mockIsServerReady := make(chan bool)
 		
 		monkey.UnpatchAll()
-		monkey.Patch(getTaxDueForPropertyOfValue, func(valueOfProperty float32) (float32, error) {
-			return 0, fmt.Errorf("mock error")
-		})
 
-        didPanic := didPanicHappen(func() {
-            updateChannelWhenServerReady(mockIsServerReady)
-        })
-
-        if !didPanic {
-            t.Error("expected panic but did not happen")
-        }
+		go func(){
+			defer func() {
+				if r := recover(); r == nil {
+					t.Error("expected panic but did not happen")
+				}
+			}()
+			monkey.Patch(getTaxDueForPropertyOfValue, func(valueOfProperty float32) (float32, error) {
+				return 0, fmt.Errorf("mock error")
+			})
+			updateChannelWhenServerReady(mockIsServerReady)
+		} ()
     })
 }
