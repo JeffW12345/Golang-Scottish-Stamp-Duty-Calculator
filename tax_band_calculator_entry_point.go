@@ -3,7 +3,6 @@ package main
 import (
 	"tax-calculator/server"
 	"time"
-    "fmt"
 )
 
 func updateChannelWhenServerReady(isServerReady chan bool) {
