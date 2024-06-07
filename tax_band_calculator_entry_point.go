@@ -6,13 +6,11 @@ import (
 )
 
 func updateChannelWhenServerReady(isServerReady chan bool) {
-    var hasPingedSuccessfully bool
-    var hasTimedOut bool
     startTime := time.Now()
-    for (!hasPingedSuccessfully && !hasTimedOut) {
+    for (true) {
         _ , err := getTaxDueForPropertyOfValue(200_000)
         if err == nil{
-            hasPingedSuccessfully = true
+            break
         }
         if time.Since(startTime) > 1000 {
             panic("Server timed out")
