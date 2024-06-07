@@ -39,8 +39,6 @@ func TestUpdateChannelWhenServerReady(t *testing.T) {
 				t.Error("channel not updated when getTaxDueForPropertyOfValue returns an error")
 			}
 		} ()
-		defer didPanicHappen()
 		go updateChannelWhenServerReady(mockIsServerReady)
 	})
-
 }
