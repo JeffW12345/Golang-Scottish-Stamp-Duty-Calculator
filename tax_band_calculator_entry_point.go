@@ -6,16 +6,16 @@ import (
 	"github.com/JeffW12345/Golang-Scottish-Stamp-Duty-Calculator/server"
 )
 
-type TaxCalculationInterface interface {
-	getTaxDueForPropertyOfValue() (float32, error)
+type TaxRetrievalInterface interface {
+	getTaxDue() (float32, error)
 }
 
-type TaxCalculator struct {
+type TaxRetrieval struct {
 	propertyValue float32
 }
 
-func (o *TaxCalculator) getTaxDueForPropertyOfValue() (float32, error) {
-	// Simulating a real calculation or request
+func (o *TaxRetrieval) getTaxDue() (float32, error) {
+	// TODO: Function body
 	return 0, nil
 }
 
@@ -23,13 +23,13 @@ func displayTaxDueForProperty(valueOfProperty float32) {
 	// TODO: Function body
 }
 
-func isServerReadyYet(taxCalculator TaxCalculationInterface) bool {
+func isServerReadyYet(taxRetriever TaxRetrievalInterface) bool {
 	startTime := time.Now()
 	for {
 		if time.Since(startTime) > (time.Second * 2) {
 			panic("Server timed out")
 		}
-		_, err := taxCalculator.getTaxDueForPropertyOfValue()
+		_, err := taxRetriever.getTaxDue()
 		if err == nil {
 			break
 		} else {
@@ -39,21 +39,16 @@ func isServerReadyYet(taxCalculator TaxCalculationInterface) bool {
 	return true
 }
 
-func getTaxDueForPropertyOfValue(valueOfProperty float32) (float32, error) {
-	// Simulating a real calculation or request
-	return 0, nil
-}
-
 func main() {
 	go server.ServerSetup()
 
 	waitTillServerReady()
-	
+
 	displayTaxDueForProperty(200_000)
 }
 
 func waitTillServerReady() {
-	tc := &TaxCalculator{propertyValue: 200_000}
+	tc := &TaxRetrieval{propertyValue: 200_000}
 	for !isServerReadyYet(tc) {
 		continue
 	}

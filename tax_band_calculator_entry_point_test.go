@@ -5,25 +5,25 @@ import (
 	"testing"
 )
 
-type MockTaxCalculatorNoErrorReturned struct {
+type MockTaxRetrieverNoErrorReturned struct {
 	propertyValue float32
 }
 
-func (o *MockTaxCalculatorNoErrorReturned) getTaxDueForPropertyOfValue() (float32, error) {
+func (o *MockTaxRetrieverNoErrorReturned) getTaxDue() (float32, error) {
 	return 0, nil
 }
 
-type MockTaxCalculatorErrorReturned struct {
+type MockTaxRetrieverErrorReturned struct {
 	propertyValue float32
 }
 
-func (o *MockTaxCalculatorErrorReturned) getTaxDueForPropertyOfValue() (float32, error) {
+func (o *MockTaxRetrieverErrorReturned) getTaxDue() (float32, error) {
 	return 0, fmt.Errorf("mock error")
 }
 
 func TestIsServerReadyYet(t *testing.T) {
 	t.Run("isServerReadyYet should return true if no error returned from API", func(t *testing.T) {
-		tc := &MockTaxCalculatorNoErrorReturned{propertyValue: 200_000}
+		tc := &MockTaxRetrieverNoErrorReturned{propertyValue: 200_000}
 		got := isServerReadyYet(tc)
 		want := true
 		if got != want {
@@ -38,16 +38,16 @@ func TestIsServerReadyYet(t *testing.T) {
 		go func() {
 			defer func() {
 				if r := recover(); r != nil {
-					message <- "OK"
+					message <- "test passes as panic happened"
 					done <- true
 				} else {
-					message <- "error"
+					message <- "test fails as panic did not happen"
 					done <- false
 				}
 			}()
 
 			fmt.Println("Starting test for panic")
-			tc := &MockTaxCalculatorErrorReturned{propertyValue: 200_000}
+			tc := &MockTaxRetrieverErrorReturned{propertyValue: 200_000}
 			isServerReadyYet(tc)
 		}()
 
