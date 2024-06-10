@@ -1,5 +1,3 @@
-module tax-calculator
+module github.com/JeffW12345/Golang-Scottish-Stamp-Duty-Calculator
 
-go 1.22.3
-
-require bou.ke/monkey v1.0.2
+go 1.22.4

@@ -3,55 +3,61 @@ package main
 import (
 	"fmt"
 	"testing"
-
-	"bou.ke/monkey"
 )
 
-func didPanicHappen(f func()) (didPanic bool) {
-    go func(){
-		defer func() {
-			if r := recover(); r != nil {
-				didPanic = true
-			}
-		}()
-		monkey.Patch(getTaxDueForPropertyOfValue, func(valueOfProperty float32) (float32, error) {
-			return 0, fmt.Errorf("mock error")
-		})
-		f()
-	} ()
-    return
+type MockTaxCalculatorNoErrorReturned struct {
+	propertyValue float32
 }
 
-func TestUpdateChannelWhenServerReady(t *testing.T) {
-    defer monkey.UnpatchAll()
+func (o *MockTaxCalculatorNoErrorReturned) getTaxDueForPropertyOfValue() (float32, error) {
+	return 0, nil
+}
 
-    t.Run("Should update channel if no error returned from API", func(t *testing.T) {
-        mockIsServerReady := make(chan bool)
-        monkey.Patch(getTaxDueForPropertyOfValue, func(valueOfProperty float32) (float32, error) {
-            return 0, nil
-        })
-        go updateChannelWhenServerReady(mockIsServerReady)
-        value := <-mockIsServerReady
-        if !value {
-            t.Error("channel not updated when getTaxDueForPropertyOfValue returns no error")
-        }
-    })
+type MockTaxCalculatorErrorReturned struct {
+	propertyValue float32
+}
 
-    t.Run("Should panic if server not ready after 1 second", func(t *testing.T) {
-        mockIsServerReady := make(chan bool)
-		
-		monkey.UnpatchAll()
+func (o *MockTaxCalculatorErrorReturned) getTaxDueForPropertyOfValue() (float32, error) {
+	return 0, fmt.Errorf("mock error")
+}
 
-		go func(){
+func TestIsServerReadyYet(t *testing.T) {
+	t.Run("isServerReadyYet should return true if no error returned from API", func(t *testing.T) {
+		tc := &MockTaxCalculatorNoErrorReturned{propertyValue: 200_000}
+		got := isServerReadyYet(tc)
+		want := true
+		if got != want {
+			t.Error("isServerReadyYet should return true if no error returned from API but did not")
+		}
+	})
+
+	t.Run("isServerReadyYet should panic if server not ready after 2 seconds", func(t *testing.T) {
+		done := make(chan bool, 1)
+		message := make(chan string, 1)
+
+		go func() {
 			defer func() {
-				if r := recover(); r == nil {
-					t.Error("expected panic but did not happen")
+				if r := recover(); r != nil {
+					message <- "OK"
+					done <- true
+				} else {
+					message <- "error"
+					done <- false
 				}
 			}()
-			monkey.Patch(getTaxDueForPropertyOfValue, func(valueOfProperty float32) (float32, error) {
-				return 0, fmt.Errorf("mock error")
-			})
-			updateChannelWhenServerReady(mockIsServerReady)
-		} ()
-    })
+
+			fmt.Println("Starting test for panic")
+			tc := &MockTaxCalculatorErrorReturned{propertyValue: 200_000}
+			isServerReadyYet(tc)
+		}()
+
+		result := <-done
+		panicMsg := <-message
+
+		fmt.Println("Outcome of panic test: ", panicMsg)
+
+		if !result {
+			t.Error("isServerReadyYet should panic if server not ready after 2 seconds")
+		}
+	})
 }

@@ -1,44 +1,60 @@
 package main
 
 import (
-	"tax-calculator/server"
 	"time"
+
+	"github.com/JeffW12345/Golang-Scottish-Stamp-Duty-Calculator/server"
 )
 
-func updateChannelWhenServerReady(isServerReady chan bool) {
-    startTime := time.Now()
-    for (true) {
-        _ , err := getTaxDueForPropertyOfValue(200_000)
-        if err == nil{
-            break
-        }
-        if time.Since(startTime) > time.Second {
-            panic("Server timed out")
-        }
-    }
-    isServerReady <- true
+type TaxCalculationInterface interface {
+	getTaxDueForPropertyOfValue() (float32, error)
+}
+
+type TaxCalculator struct {
+	propertyValue float32
+}
+
+func (o *TaxCalculator) getTaxDueForPropertyOfValue() (float32, error) {
+	// Simulating a real calculation or request
+	return 0, nil
 }
 
 func displayTaxDueForProperty(valueOfProperty float32) {
-    // TODO: Function body
+	// TODO: Function body
+}
+
+func isServerReadyYet(taxCalculator TaxCalculationInterface) bool {
+	startTime := time.Now()
+	for {
+		if time.Since(startTime) > (time.Second * 2) {
+			panic("Server timed out")
+		}
+		_, err := taxCalculator.getTaxDueForPropertyOfValue()
+		if err == nil {
+			break
+		} else {
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+	return true
 }
 
 func getTaxDueForPropertyOfValue(valueOfProperty float32) (float32, error) {
-    /*
-    TODO - Write code to return the following: 
-
-    - The value of the tax (or zero if the server was unable to process the request) 
-
-    - Nil (or Error object if the server was unable to process the request)
-    */
-    return 0, nil
+	// Simulating a real calculation or request
+	return 0, nil
 }
 
 func main() {
-    isServerReady := make(chan bool)
-    go server.ServerSetup()
-    go updateChannelWhenServerReady(isServerReady)
-    
-    <- isServerReady
-    displayTaxDueForProperty(200_000)
+	go server.ServerSetup()
+
+	waitTillServerReady()
+	
+	displayTaxDueForProperty(200_000)
+}
+
+func waitTillServerReady() {
+	tc := &TaxCalculator{propertyValue: 200_000}
+	for !isServerReadyYet(tc) {
+		continue
+	}
 }
