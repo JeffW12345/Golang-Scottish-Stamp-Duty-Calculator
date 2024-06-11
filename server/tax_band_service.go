@@ -1,43 +1,68 @@
 package server
 
+import (
+	"encoding/json"
+	"io"
+	"os"
+	"fmt"
+)
+
 type TaxBand struct {
-	start         float32
-	end           float32
-	percentageTax float32
+	Start         float32 `json:"start"`
+	End           float32 `json:"end"`
+	PercentageTax float32 `json:"percentageTax"`
 }
 
 type TaxBands struct {
-	bands []TaxBand
+	Bands []TaxBand
+	JsonConfigFilePath string
 }
 
-func importAndProcessTaxBands() {
-	importTaxBands()
-	sortBandsByStartingValue()
-	performDataIntegrityCheckOnBands()
+func (tbs *TaxBands) ImportAndProcessTaxBands() {
+	tbs.importTaxBands()
+	tbs.sortBandsByStartingValue()
+	tbs.performDataIntegrityCheckOnBands()
 }
 
-func getTaxBands() ([] TaxBand) {
-	//TODO 
-	return []TaxBand{}
+func (tbs *TaxBands) getTaxBands() []TaxBand {
+	return tbs.Bands
 }
 
-func importTaxBands() {
-	//TODO
-}
+func (tbs *TaxBands) importTaxBands() {
+	file := openFile(tbs)
+	defer file.Close()
 
-func sortBandsByStartingValue() {
-	//TODO 
-}
+	fileContents := jsonBandsConfigFileAsString(file)
 
-func performDataIntegrityCheckOnBands() {
-	//TODO
-}
-
-func (tb *TaxBands) addTaxBand(start, end, percentageTax float32) {
-	band := TaxBand{
-		start:         start,
-		end:           end,
-		percentageTax: percentageTax,
+	if err := json.Unmarshal(fileContents, &tbs.Bands); err != nil {
+			panic(fmt.Errorf("json conversion error: %v", err))
+		}
 	}
-	tb.bands = append(tb.bands, band)
+
+func openFile(tbs *TaxBands) *os.File {
+	file, err := os.Open(tbs.JsonConfigFilePath)
+	if err != nil {
+		panic(fmt.Errorf("file open error: %v", err))
+	}
+	return file
+}
+
+func jsonBandsConfigFileAsString(file *os.File) []byte {
+	fileContents, err := io.ReadAll(file)
+	if err != nil {
+		panic(fmt.Errorf("file read error: %v", err))
+	}
+	return fileContents
+}
+
+func (tbs *TaxBands) sortBandsByStartingValue() {
+	//TODO
+}
+
+func (tbs *TaxBands) performDataIntegrityCheckOnBands() {
+	//TODO
+}
+
+func (tb *TaxBands) addTaxBand(taxBand TaxBand) {
+	tb.Bands = append(tb.Bands, taxBand)
 }

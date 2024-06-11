@@ -40,6 +40,9 @@ func isServerReadyYet(taxRetriever TaxRetrievalInterface) bool {
 }
 
 func main() {
+	tbs := server.TaxBands{}
+	tbs.JsonConfigFilePath = "resources/tax_band_configuration.json"
+	tbs.ImportAndProcessTaxBands()
 	go server.ServerSetup()
 
 	waitTillServerReady()

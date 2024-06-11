@@ -16,19 +16,19 @@ func (tc *TaxCalculator) calculateTaxDue(valueOfProperty float32) (float32, erro
 
 	var taxDue float32
 	taxDue = 0.0
-	for _, band := range tc.bands{
-		if valueOfProperty <= band.start{
-			break;
+	for _, band := range tc.bands {
+		if valueOfProperty <= band.Start {
+			break
 		}
-		if valueOfProperty >= band.end{
-			taxDue += ((band.end - band.start) * band.percentageTax)
+		if valueOfProperty >= band.End {
+			taxDue += ((band.End - band.Start) * band.PercentageTax)
 		} else {
-			taxDue += ((valueOfProperty - band.start) * band.percentageTax)
+			taxDue += ((valueOfProperty - band.Start) * band.PercentageTax)
 			break
 		}
 	}
-	
-	taxDueRounded := float32(math.Round(float64(taxDue) * 100) / 100)
+
+	taxDueRounded := float32(math.Round(float64(taxDue)*100) / 100)
 	return taxDueRounded, nil
 }
 
