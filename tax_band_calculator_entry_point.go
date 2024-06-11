@@ -48,7 +48,7 @@ func main() {
 }
 
 func waitTillServerReady() {
-	tc := &TaxRetrieval{propertyValue: 200_000}
+	tc := &TaxRetrieval{propertyValue: 0}
 	for !isServerReadyYet(tc) {
 		continue
 	}

@@ -2,12 +2,36 @@ package server
 
 import (
 	"fmt"
+	"math"
 )
 
-func calculateTaxDue(valueOfProperty float32) (float32, error) {
+type TaxCalculator struct {
+	bands []TaxBand
+}
+
+func (tc *TaxCalculator) calculateTaxDue(valueOfProperty float32) (float32, error) {
 	if valueOfProperty < 0 {
 		return 0, fmt.Errorf("value of property cannot be negative")
 	}
 
-	return 0, nil
+	var taxDue float32
+	taxDue = 0.0
+	for _, band := range tc.bands{
+		if valueOfProperty <= band.start{
+			break;
+		}
+		if valueOfProperty >= band.end{
+			taxDue += ((band.end - band.start) * band.percentageTax)
+		} else {
+			taxDue += ((valueOfProperty - band.start) * band.percentageTax)
+			break
+		}
+	}
+	
+	taxDueRounded := float32(math.Round(float64(taxDue) * 100) / 100)
+	return taxDueRounded, nil
+}
+
+func (tc *TaxCalculator) addTaxBands(taxBands []TaxBand) {
+	tc.bands = append(tc.bands, taxBands...)
 }

@@ -52,9 +52,8 @@ func TestIsServerReadyYet(t *testing.T) {
 		}()
 
 		result := <-done
-		panicMsg := <-message
 
-		fmt.Println("Outcome of panic test: ", panicMsg)
+		fmt.Println("Outcome of panic test: ", <-message)
 
 		if !result {
 			t.Error("isServerReadyYet should panic if server not ready after 2 seconds")
