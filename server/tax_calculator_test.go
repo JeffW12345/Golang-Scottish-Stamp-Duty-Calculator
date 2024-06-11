@@ -6,7 +6,7 @@ import (
 
 func TestGetTaxDueForPropertyOfValue(t *testing.T) {
 	tc := TaxCalculator{}
-	tc.addTaxBands(TestTaxBands())
+	tc.addTaxBands(GetValidSortedTestTaxBands())
 
 	t.Run("calculateTaxDue should return error if property value negative number", func(t *testing.T) {
 		_, err := tc.calculateTaxDue(-1)
@@ -31,7 +31,7 @@ func TestGetTaxDueForPropertyOfValue(t *testing.T) {
 			t.Error("Should have returned zero as property value within first band")
 		}
 	})
-	
+
 	t.Run("calculateTaxDue should correct amount if price within second band", func(t *testing.T) {
 		val, _ := tc.calculateTaxDue(200_000)
 		var want float32 = 1100.00
@@ -58,7 +58,7 @@ func TestGetTaxDueForPropertyOfValue(t *testing.T) {
 
 func TestAddTaxBands(t *testing.T) {
 	tc := TaxCalculator{}
-	expectedBands := TestTaxBands()
+	expectedBands := GetValidSortedTestTaxBands()
 
 	tc.addTaxBands(expectedBands)
 	if len(tc.bands) != len(expectedBands) {

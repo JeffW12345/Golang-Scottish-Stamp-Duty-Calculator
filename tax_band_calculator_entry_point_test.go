@@ -35,21 +35,7 @@ func TestIsServerReadyYet(t *testing.T) {
 		done := make(chan bool, 1)
 		message := make(chan string, 1)
 
-		go func() {
-			defer func() {
-				if r := recover(); r != nil {
-					message <- "test passes as panic happened"
-					done <- true
-				} else {
-					message <- "test fails as panic did not happen"
-					done <- false
-				}
-			}()
-
-			fmt.Println("Starting test for panic")
-			tc := &MockTaxRetrieverErrorReturned{propertyValue: 200_000}
-			isServerReadyYet(tc)
-		}()
+		checkIfPanicsIfTimeout(message, done)
 
 		result := <-done
 
@@ -59,4 +45,22 @@ func TestIsServerReadyYet(t *testing.T) {
 			t.Error("isServerReadyYet should panic if server not ready after 2 seconds")
 		}
 	})
+}
+
+func checkIfPanicsIfTimeout(message chan string, done chan bool) {
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				message <- "test passes as panic happened"
+				done <- true
+			} else {
+				message <- "test fails as panic did not happen"
+				done <- false
+			}
+		}()
+
+		fmt.Println("Starting test for panic")
+		tc := &MockTaxRetrieverErrorReturned{propertyValue: 200_000}
+		isServerReadyYet(tc)
+	}()
 }
