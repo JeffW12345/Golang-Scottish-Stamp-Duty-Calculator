@@ -9,7 +9,7 @@ type TaxCalculator struct {
 	bands []TaxBand
 }
 
-func (tc *TaxCalculator) calculateTaxDue(valueOfProperty float64) (float64, error) {
+func (tc *TaxCalculator) CalculateTaxDue(valueOfProperty float64) (float64, error) {
 	if valueOfProperty < 0 {
 		return 0, fmt.Errorf("value of property cannot be negative")
 	}
@@ -32,6 +32,6 @@ func (tc *TaxCalculator) calculateTaxDue(valueOfProperty float64) (float64, erro
 	return taxDueRounded, nil
 }
 
-func (tc *TaxCalculator) addTaxBands(taxBands []TaxBand) {
+func (tc *TaxCalculator) AddTaxBands(taxBands []TaxBand) {
 	tc.bands = append(tc.bands, taxBands...)
 }

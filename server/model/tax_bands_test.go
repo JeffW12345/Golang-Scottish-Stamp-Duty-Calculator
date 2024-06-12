@@ -1,9 +1,9 @@
 package model
 
 import (
+	"log"
 	"os"
 	"testing"
-	"log"
 )
 
 func TestImportTaxBands(t *testing.T) {
@@ -124,8 +124,8 @@ func TestSortByStartingValue(t *testing.T) {
 
 func TestPerformDataIntegrityCheckOnBands(t *testing.T) {
 	tests := []struct {
-		name     string
-		taxBands TaxBands
+		name      string
+		taxBands  TaxBands
 		wantPanic bool
 	}{
 		{
@@ -195,7 +195,7 @@ func TestPerformDataIntegrityCheckOnBands(t *testing.T) {
 					}
 				}
 			}()
-			test.taxBands.PerformDataIntegrityCheckOnBands()
+			test.taxBands.performDataIntegrityCheckOnBands()
 		})
 	}
 }
