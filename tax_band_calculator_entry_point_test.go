@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"testing"
+	"log"
 )
 
 type MockTaxRetrieverNoErrorReturned struct {
@@ -32,16 +33,14 @@ func TestIsServerReadyYet(t *testing.T) {
 	})
 
 	t.Run("isServerReadyYet should panic if server not ready after 2 seconds", func(t *testing.T) {
-		done := make(chan bool, 1)
+		panicHappened := make(chan bool, 1)
 		message := make(chan string, 1)
 
-		checkIfPanicsIfTimeout(message, done)
+		checkIfPanicsIfTimeout(message, panicHappened)
 
-		result := <-done
+		log.Println("Outcome of panic test: ", <-message)
 
-		fmt.Println("Outcome of panic test: ", <-message)
-
-		if !result {
+		if !<-panicHappened {
 			t.Error("isServerReadyYet should panic if server not ready after 2 seconds")
 		}
 	})
@@ -58,8 +57,6 @@ func checkIfPanicsIfTimeout(message chan string, done chan bool) {
 				done <- false
 			}
 		}()
-
-		fmt.Println("Starting test for panic")
 		tc := &MockTaxRetrieverErrorReturned{propertyValue: 200_000}
 		isServerReadyYet(tc)
 	}()

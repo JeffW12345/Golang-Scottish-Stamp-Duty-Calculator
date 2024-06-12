@@ -39,6 +39,13 @@ func isServerReadyYet(taxRetriever TaxRetrievalInterface) bool {
 	return true
 }
 
+func waitTillServerReady() {
+	tc := &TaxRetrieval{propertyValue: 0}
+	for !isServerReadyYet(tc) {
+		continue
+	}
+}
+
 func main() {
 	tbs := server.TaxBands{}
 	tbs.JsonConfigFilePath = "resources/tax_band_configuration.json"
@@ -48,11 +55,4 @@ func main() {
 	waitTillServerReady()
 
 	displayTaxDueForProperty(200_000)
-}
-
-func waitTillServerReady() {
-	tc := &TaxRetrieval{propertyValue: 0}
-	for !isServerReadyYet(tc) {
-		continue
-	}
 }
