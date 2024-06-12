@@ -73,7 +73,3 @@ func (tbs *TaxBands) performDataIntegrityCheckOnBands() {
 	// Check if each start value is less than every end value
 	//TODO - Check if start, end or percentageTax negative
 }
-
-func (tb *TaxBands) addTaxBand(taxBand TaxBand) {
-	tb.Bands = append(tb.Bands, taxBand)
-}
