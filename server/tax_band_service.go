@@ -68,6 +68,7 @@ func (tbs *TaxBands) sortByStartingValue() {
 }
 
 func (tbs *TaxBands) performDataIntegrityCheckOnBands() {
+	// Check if has at least one band
 	//TODO - Check if sorted by start value
 	// Check if each start value is less than every end value
 	//TODO - Check if start, end or percentageTax negative
