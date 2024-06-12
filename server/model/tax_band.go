@@ -9,9 +9,9 @@ import (
 )
 
 type TaxBand struct {
-	Start         float32 `json:"start"`
-	End           float32 `json:"end"`
-	PercentageTax float32 `json:"percentageTax"`
+	Start         float64 `json:"start"`
+	End           float64 `json:"end"`
+	PercentageTax float64 `json:"percentageTax"`
 }
 
 type TaxBands struct {
@@ -22,7 +22,7 @@ type TaxBands struct {
 func (tbs *TaxBands) ImportAndProcessTaxBands() {
 	tbs.importTaxBands()
 	tbs.sortByStartingValue()
-	tbs.performDataIntegrityCheckOnBands()
+	//tbs.performDataIntegrityCheckOnBands()
 }
 
 func (tbs *TaxBands) getTaxBands() []TaxBand {
@@ -36,7 +36,7 @@ func (tbs *TaxBands) importTaxBands() {
 	fileContents := jsonBandsConfigFileAsString(file)
 
 	if err := json.Unmarshal(fileContents, &tbs.Bands); err != nil {
-			panic(fmt.Errorf("json conversion error: %v", err))
+			panic(fmt.Sprintf("json conversion error: %v", err))
 		}
 	
 	//TODO - Test this
@@ -48,7 +48,7 @@ func (tbs *TaxBands) importTaxBands() {
 func openFile(tbs *TaxBands) *os.File {
 	file, err := os.Open(tbs.JsonConfigFilePath)
 	if err != nil {
-		panic(fmt.Errorf("file open error: %v", err))
+		panic(fmt.Sprintf("file open error: %v", err))
 	}
 	return file
 }
@@ -56,7 +56,7 @@ func openFile(tbs *TaxBands) *os.File {
 func jsonBandsConfigFileAsString(file *os.File) []byte {
 	fileContents, err := io.ReadAll(file)
 	if err != nil {
-		panic(fmt.Errorf("file read error: %v", err))
+		panic(fmt.Sprintf("file read error: %v", err))
 	}
 	return fileContents
 }
@@ -67,9 +67,29 @@ func (tbs *TaxBands) sortByStartingValue() {
 	  })
 }
 
-func (tbs *TaxBands) performDataIntegrityCheckOnBands() {
-	// Check if has at least one band
-	//TODO - Check if sorted by start value
-	// Check if each start value is less than every end value
-	//TODO - Check if start, end or percentageTax negative
+func (tbs *TaxBands) PerformDataIntegrityCheckOnBands() {
+    var previousEnd float64 = -1
+
+    for i, v := range tbs.Bands {
+		//TODO - Delete
+        fmt.Printf("TEST PRINT. Index: %d, Start value: %f, End value: %f\n", i, v.Start, v.End)
+        
+        // Check if end value is greater than start value
+        if v.Start >= v.End {
+            panic(fmt.Sprintf("Band start values must be less than end values: index %d, start %f, end %f", i, v.Start, v.End))
+        }
+
+        // Check if current band start value is greater than previous end value
+        if i > 0 && v.Start <= previousEnd {
+            panic(fmt.Sprintf("Band start value must be greater than the previous band's end value: index %d, start %f, previous end %f", i, v.Start, previousEnd))
+        }
+
+        // Check that the band variables are all positive numbers
+        if v.Start < 0 || v.End < 0 || v.PercentageTax < 0 {
+            panic(fmt.Sprintf("Band variables must be positive numbers: index %d, start %f, end %f, percentageTax %f", i, v.Start, v.End, v.PercentageTax))
+        }
+
+        // Update previous end value for the next iteration
+        previousEnd = v.End
+    }
 }

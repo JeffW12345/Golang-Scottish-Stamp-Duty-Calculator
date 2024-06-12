@@ -121,3 +121,81 @@ func TestSortByStartingValue(t *testing.T) {
 		}
 	}
 }
+
+func TestPerformDataIntegrityCheckOnBands(t *testing.T) {
+	tests := []struct {
+		name     string
+		taxBands TaxBands
+		wantPanic bool
+	}{
+		{
+			name: "Valid Bands",
+			taxBands: TaxBands{
+				Bands: []TaxBand{
+					{Start: 0, End: 145000, PercentageTax: 0},
+					{Start: 145000.01, End: 250000, PercentageTax: 0.02},
+					{Start: 250000.01, End: 325000, PercentageTax: 0.05},
+					{Start: 325000.01, End: 750000, PercentageTax: 0.10},
+					{Start: 750000.01, End: 2147483647, PercentageTax: 0.12},
+				},
+			},
+			wantPanic: false,
+		},
+		{
+			name: "Invalid Start and End Values",
+			taxBands: TaxBands{
+				Bands: []TaxBand{
+					{Start: 0, End: 145000, PercentageTax: 0},
+					{Start: 145000.01, End: 250000, PercentageTax: 0.02},
+					{Start: 250000.01, End: 250000.01, PercentageTax: 0.05},
+					{Start: 325000.01, End: 750000, PercentageTax: 0.10},
+					{Start: 750000.01, End: 2147483647, PercentageTax: 0.12},
+				},
+			},
+			wantPanic: true,
+		},
+		{
+			name: "Non-increasing Start Values",
+			taxBands: TaxBands{
+				Bands: []TaxBand{
+					{Start: 0, End: 145000, PercentageTax: 0},
+					{Start: 145000.01, End: 250000, PercentageTax: 0.02},
+					{Start: 200000.01, End: 325000, PercentageTax: 0.05},
+					{Start: 325000.01, End: 750000, PercentageTax: 0.10},
+					{Start: 750000.01, End: 2147483647, PercentageTax: 0.12},
+				},
+			},
+			wantPanic: true,
+		},
+		{
+			name: "Negative Values",
+			taxBands: TaxBands{
+				Bands: []TaxBand{
+					{Start: -1, End: 145000, PercentageTax: 0},
+					{Start: 145000.01, End: 250000, PercentageTax: 0.02},
+					{Start: 250000.01, End: 325000, PercentageTax: 0.05},
+					{Start: 325000.01, End: 750000, PercentageTax: 0.10},
+					{Start: 750000.01, End: 2147483647, PercentageTax: 0.12},
+				},
+			},
+			wantPanic: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			defer func() {
+				if r := recover(); r != nil {
+					if !test.wantPanic {
+						t.Errorf("unexpected panic: %v", r)
+					}
+				} else {
+					if test.wantPanic {
+						t.Errorf("expected panic but did not happen")
+					}
+				}
+			}()
+			test.taxBands.PerformDataIntegrityCheckOnBands()
+		})
+	}
+}

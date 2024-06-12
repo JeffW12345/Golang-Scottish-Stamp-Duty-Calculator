@@ -9,12 +9,12 @@ type TaxCalculator struct {
 	bands []TaxBand
 }
 
-func (tc *TaxCalculator) calculateTaxDue(valueOfProperty float32) (float32, error) {
+func (tc *TaxCalculator) calculateTaxDue(valueOfProperty float64) (float64, error) {
 	if valueOfProperty < 0 {
 		return 0, fmt.Errorf("value of property cannot be negative")
 	}
 
-	var taxDue float32
+	var taxDue float64
 	taxDue = 0.0
 	for _, band := range tc.bands {
 		if valueOfProperty <= band.Start {
@@ -28,7 +28,7 @@ func (tc *TaxCalculator) calculateTaxDue(valueOfProperty float32) (float32, erro
 		}
 	}
 
-	taxDueRounded := float32(math.Round(float64(taxDue)*100) / 100)
+	taxDueRounded := float64(math.Round(float64(taxDue)*100) / 100)
 	return taxDueRounded, nil
 }
 
