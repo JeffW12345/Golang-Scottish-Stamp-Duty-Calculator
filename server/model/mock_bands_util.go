@@ -1,4 +1,4 @@
-package server
+package model
 
 func GetValidSortedTestTaxBands() []TaxBand {
 	return []TaxBand{

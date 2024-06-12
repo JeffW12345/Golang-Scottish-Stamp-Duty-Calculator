@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/JeffW12345/Golang-Scottish-Stamp-Duty-Calculator/server"
+	"github.com/JeffW12345/Golang-Scottish-Stamp-Duty-Calculator/server/model"
 )
 
 type TaxRetrievalInterface interface {
@@ -47,7 +48,7 @@ func waitTillServerReady() {
 }
 
 func main() {
-	tbs := server.TaxBands{}
+	tbs := model.TaxBands{}
 	tbs.JsonConfigFilePath = "resources/tax_band_configuration.json"
 	tbs.ImportAndProcessTaxBands()
 	go server.ServerSetup()
