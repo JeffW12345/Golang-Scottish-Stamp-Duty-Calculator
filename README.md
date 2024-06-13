@@ -23,11 +23,11 @@ Enter the following:
 
 go run .
 
-You will now be presented with console output showing the tax due on the property. In the £200,000 property example already in the app, the final line of the console output would be the following:
+You will now be presented with console output which includes the following:
 
-**The tax due for the property valued at 200000.00 is 1100.00**
+**CLICK HERE: http://localhost:8080/**
 
-The lines above the final line are server log messages, and can be disregarded.
+Press control and then left click on the hyperlink. If you enter the property value and press 'submit', you will be presented with the tax amount.
 
 ASSUMPTIONS
 ===========
@@ -42,8 +42,6 @@ For the MVP, it will be assumed that:
 
 POSSIBLE AVENUES FOR FUTURE DEVELOPMENT
 =======================================
-
-- May get input from a user by a console or from localhost web page.
 - Web scraping https://revenue.scot/taxes/land-buildings-transaction-tax/residential-property#residential%20property%20rates%20and%20bands to check that the app's bands reflect what's shown there. 
 - Adding functionality to cater for other taxes - maybe Stamp Duty for other parts of the UK.
 - Using a decimal library to avoid rounding errors. 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Stamp Duty Calculator</title>
+    <script src="/resources/form-submission-handling.js" defer></script>
+</head>
+<body>
+    <h2>Stamp Duty Calculator</h2>
+    <form id="propertyValueForm">
+        <label for="valueInput">Enter a value:</label>
+        <input type="text" id="valueInput" name="propertyValue">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="results" style="display: none">
+        <p>Property value: £<span id="valueOfProperty"></span></p>
+        <p>Tax payable: £<span id="taxDue"></span></p>
+    </div>
+</body>
+</html>

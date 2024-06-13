@@ -11,9 +11,9 @@ func main() {
 	go server.ServerSetup()
 
 	client := &client_model.TaxRequest{}
+	client.PropertyValue = 100
 	client.WaitTillServerReady() // Times out if not ready after 2 seconds.
-	log.Println("Server ready")
+	log.Println("\n\nCLICK HERE: http://localhost:8080/\n\n")
 
-	// PASS PROPERTY VALUE INTO THIS METHOD: 
-	client.DisplayTaxDueForProperty(200_000)
+	for {} // Infinite loop to prevent the program terminating.
 }
