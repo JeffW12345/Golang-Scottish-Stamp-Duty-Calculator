@@ -15,11 +15,7 @@ Navigate to the repo in a command terminal. Then type the following:
 
 go mod download
 
-Change the figure in the 'DisplayTaxDueForProperty' method call in the 'main' function to the value of the property you want the tax for. 
-
-Pass the property value into the DisplayTaxDueForProperty method in the main function of 'main.go'. 
-
-Enter the following:
+Now enter the following:
 
 go run .
 
