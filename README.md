@@ -6,9 +6,11 @@ This app calculates LBBT (essentially Scottish stamp duty - see https://revenue.
 The user passes the property value into the DisplayTaxDueForProperty method in the main function of 'main.go', and is presented with 
 console output showing the tax due on the property. 
 
-In the £200,000 property example already in the app, the console output would be the following:
+In the £200,000 property example already in the app, the final line of the console output would be the following:
 
 **The tax due for the property valued at 200000.00 is 1100.00**
+
+The lines above the final line are server log messages, and can be disregarded, except for debugging purposes.
 
 RUNNING INSTRUCTIONS
 ====================

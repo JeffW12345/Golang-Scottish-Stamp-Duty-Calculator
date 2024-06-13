@@ -11,7 +11,7 @@ func main() {
 	go server.ServerSetup()
 
 	client := &client_model.TaxRequest{}
-	client.WaitTillServerReady()
+	client.WaitTillServerReady() // Times out if not ready after 2 seconds.
 	log.Println("Server ready")
 
 	// PASS PROPERTY VALUE INTO THIS METHOD: 
