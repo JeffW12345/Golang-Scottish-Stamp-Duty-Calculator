@@ -17,14 +17,13 @@ go mod download
 
 Change the figure in the 'DisplayTaxDueForProperty' method call in the 'main' function to the value of the property you want the tax for. 
 
+Pass the property value into the DisplayTaxDueForProperty method in the main function of 'main.go'. 
+
 Enter the following:
 
 go run .
 
-Pass the property value into the DisplayTaxDueForProperty method in the main function of 'main.go'. You will now be presented with 
-console output showing the tax due on the property. 
-
-In the £200,000 property example already in the app, the final line of the console output would be the following:
+You will now be presented with console output showing the tax due on the property. In the £200,000 property example already in the app, the final line of the console output would be the following:
 
 **The tax due for the property valued at 200000.00 is 1100.00**
 
