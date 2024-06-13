@@ -1,4 +1,4 @@
-package model
+package server_model
 
 type TaxBand struct {
 	Start         float64 `json:"start"`
