@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const taxDueObject = await response.json();
-            document.getElementById("valueOfProperty").textContent = propertyValue;
-            document.getElementById("taxDue").textContent = taxDueObject.taxDue;
+            document.getElementById("valueOfProperty").textContent = String(parseFloat(propertyValue).toFixed(2)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            document.getElementById("taxDue").textContent = String(parseFloat(taxDueObject.taxDue).toFixed(2)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("results").style.display = "block";
         } catch (error) {
             console.error('Fetch error:', error);
@@ -23,4 +23,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //TODO - Code to handle unhappy path. 
-// TODO - Code to format numbers with commas
